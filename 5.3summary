@@ -1,0 +1,129 @@
+在终端下输入lsusb,列出系统识别的USB设备列表
+输入dmesg可显示连接设备名（红色字体部分）
+[19886.042504] usb 1-7: new full-speed USB device number 4 using xhci_hcd
+[19886.188784] usb 1-7: New USB device found, idVendor=0403, idProduct=6001
+[19886.188790] usb 1-7: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[19886.188795] usb 1-7: Product: USB Serial Converter
+[19886.188798] usb 1-7: Manufacturer: FTDI
+[19886.188802] usb 1-7: SerialNumber: FTA9O9AH
+[19887.288200] usbcore: registered new interface driver usbserial
+[19887.288206] usbcore: registered new interface driver usbserial_generic
+[19887.288213] usbserial: USB Serial support registered for generic
+[19887.290235] usbcore: registered new interface driver ftdi_sio
+[19887.290243] usbserial: USB Serial support registered for FTDI USB Serial Device
+[19887.290278] ftdi_sio 1-7:1.0: FTDI USB Serial Device converter detected
+[19887.290346] usb 1-7: Detected FT232RL
+[19887.290735] usb 1-7: FTDI USB Serial Device converter now attached to ttyUSB0
+
+##########################################################################################################################
+
+1. 输入  ls /dev/ttyUSB*
+    提示没有那个文件或目录，或者可以看出串口设备是USBD的COM口信息（多少）
+
+2. 笔记本上的情况
+    输入   ls /dev/ttyUSB*
+    输出 /dev/ttyUSB0    表示ubuntu本身就自带了usb转串口的驱动
+
+3. 连接测试
+    接上USB串口线，看看系统是否可以识别。输入以下命令
+    dmesg | grep ttyUSB
+
+    我的笔记本输出 [ 27.224393] usb 2-1.1: FTDI USB Serial Device converter now attached to ttyUSB0
+    或者直接可以到/dev下看看有没有ttyUSB0或者ttyUSB1
+
+4. 安装 minicom，相当于windows下的超级终端。
+     sudo apt-get install minicom
+
+5. 配置minicom。一般要root权限使用mincom
+   sudo minicom -s
+   进行minicom配置。
+    +-----[configuration]------+
+            | Filenames and paths      |
+            | File transfer protocols  |
+            | Serial port setup        |
+            | Modem and dialing        |
+            | Screen and keyboard      |
+            | Save setup as dfl        |
+            | Save setup as..          |
+            | Exit                     |
+            | Exit from Minicom     
+    选择 Serial port setup，会出现：
+    | A -    Serial Device      : /dev/tty8                                 |
+    | B - Lockfile Location     : /var/lock                                 |
+    | C -   Callin Program      :                                           |
+    | D -  Callout Program      :                                           |
+    | E -    Bps/Par/Bits       : 115200 8N1                                |
+    | F - Hardware Flow Control : Yes                                       |
+    | G - Software Flow Control : No                                        |
+    |                                                                       |
+    |    Change which setting?                                              |
+    +-----------------------------------------------------------------------+
+            | Screen and keyboard      |
+            | Save setup as dfl        |
+            | Save setup as..          |
+            | Exit                     |
+            | Exit from Minicom        |
+            +--------------------------+
+##########################################################################################################################
+
+uname -a:查看linux内核版本代码
+通过内核版本下载相应的程序
+https://cn.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
+##########################################################################################################################
+检查是否安装驱动：lsmod | grep usbserial
+
+检查设备：dmesg
+[19887.288200] usbcore: registered new interface driver usbserial
+[19887.288206] usbcore: registered new interface driver usbserial_generic
+[19887.288213] usbserial: USB Serial support registered for generic
+[19887.290235] usbcore: registered new interface driver ftdi_sio
+[19887.290243] usbserial: USB Serial support registered for FTDI USB Serial Device
+[19887.290278] ftdi_sio 1-7:1.0: FTDI USB Serial Device converter detected
+[24026.275371] ftdi_sio ttyUSB0: FTDI USB Serial Device converter now disconnected from ttyUSB0
+[24026.275406] ftdi_sio 1-7:1.0: device disconnected
+[24076.191287] ftdi_sio 1-7:1.0: FTDI USB Serial Device converter detected
+New USB device strings: Mfr=1, Product=2, SerialNumber=3
+
+
+安装minicom
+sudo apt install minicom
+sudo minicom -s
+##########################################################################################################################
+##########################################################################################################################
+第一次尝试串口连接：
+将/dev/tty8修改为 A - Serial Device      : /dev/USB0
+F - Hardware Flow Control : No 保持不变
+
+          --------------------------------------------------------------------+
+          |                      Minicom Command Summary                      |
+          |                                                                   |
+          |              Commands can be called by CTRL-A <key>               |
+          |                                                                   |
+          |               Main Functions                  Other Functions     |
+          |                                                                   |
+          | Dialing directory..D  run script (Go)....G | Clear Screen.......C |
+          | Send files.........S  Receive files......R | cOnfigure Minicom..O |
+          | comm Parameters....P  Add linefeed.......A | Suspend minicom....J |
+          | Capture on/off.....L  Hangup.............H | eXit and reset.....X |            CTRL+A  Z
+          | send break.........F  initialize Modem...M | Quit with no reset.Q |
+          | Terminal settings..T  run Kermit.........K | Cursor key mode....I |
+          | lineWrap on/off....W  local Echo on/off..E | Help screen........Z |
+          | Paste file.........Y  Timestamp toggle...N | scroll Back........B |
+          | Add Carriage Ret...U                                              |
+          |                                                                   |
+          |             Select function or press Enter for none.              |
+          +-------------------------------------------------------------------+
+
+输入dmesg | tail
+[24076.041589] usb 1-7: new full-speed USB device number 5 using xhci_hcd
+[24076.187908] usb 1-7: New USB device found, idVendor=0403, idProduct=6001
+[24076.187914] usb 1-7: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[24076.187918] usb 1-7: Product: USB Serial Converter
+[24076.187922] usb 1-7: Manufacturer: FTDI
+[24076.187925] usb 1-7: SerialNumber: FTA9O9AH
+[24076.191287] ftdi_sio 1-7:1.0: FTDI USB Serial Device converter detected
+[24076.191354] usb 1-7: Detected FT232RL
+[24076.191711] usb 1-7: FTDI USB Serial Device converter now attached to ttyUSB0
+[28839.971182] perf: interrupt took too long (2530 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
+
+
