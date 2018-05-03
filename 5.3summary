@@ -209,4 +209,31 @@ KERNEL=="ttyUSB[0-9]*", MODE="0666"
  方案三：
  linux下的Qt串口数据读取  https://blog.csdn.net/qq_26849233/article/details/72863752
  
-    
+##########################################################################################################################
+注意：
+只是串口传输数据，而不需要串口来处理，那么使用原始模式(Raw Mode)方式来通讯，设置方式如下：
+options.c_lflag  &= ~(ICANON | ECHO | ECHOE | ISIG);  /*输入*/
+options.c_oflag  &= ~OPOST;   /*输出*/
+
+1.读写串口
+设置好串口之后，把串口当作文件读写进行操作
+
+2.发送数据
+char buffer[1024];
+int Length;
+int nByte;
+nByte = write(fd, buffer ,Length)
+
+3.读取串口数据
+使用文件操作read函数读取，如果设置为原始模式(Raw Mode)传输数据，那么read函数返回的字符数是实际串口收到的字符数
+
+可以使用操作文件的函数来实现异步读取，如fcntl，或者select等来操作
+char buff[1024];
+int Len;
+int readByte = read(fd,buff,Len);
+
+4.关闭串口
+就是关闭文件
+close(fd);
+
+
