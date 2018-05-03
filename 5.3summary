@@ -201,8 +201,12 @@ KERNEL=="ttyUSB[0-9]*", MODE="0666"
  
  串口通信（读取设备数据）问题解决方案：
  方案一：
- 使用minicom来打印串口信息
+ 通过光盘的联机软件读取数据
  
  方案二：
+ 使用minicom来打印串口信息
+ 
+ 方案三：
+ linux下的Qt串口数据读取  https://blog.csdn.net/qq_26849233/article/details/72863752
  
     
