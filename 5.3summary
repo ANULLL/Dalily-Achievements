@@ -1,3 +1,5 @@
+Linux/drivers/usb/serial/ftdi_sio.c源码地址：http://www.cnblogs.com/shangdawei/p/4073471.html
+##########################################################################################################################
 在终端下输入lsusb,列出系统识别的USB设备列表
 输入dmesg可显示连接设备名（红色字体部分）
 [19886.042504] usb 1-7: new full-speed USB device number 4 using xhci_hcd
@@ -71,6 +73,7 @@ uname -a:查看linux内核版本代码
 https://cn.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 ##########################################################################################################################
 检查是否安装驱动：lsmod | grep usbserial
+如果有usbserial，说明系统支持USB转串口
 
 检查设备：dmesg
 [19887.288200] usbcore: registered new interface driver usbserial
@@ -144,3 +147,44 @@ is informed that its samples are exceeding this limit, it will drop its sampling
 usage.Some perf sampling happens in NMIs.  If these samples unexpectedly take too long to execute, the NMIs can become
 stacked up next to each other so much that nothing else is allowed to execute.
 
+
+第二次尝试串口连接：
+将/dev/tty8修改为 A - Serial Device      : /dev/USB0
+F - Hardware Flow Control : Yes
+
+
+
+##########################################################################################################################
+#########################################################################################################################
+现在已经能正确识别该设备（体脂仪），但是有个问题：usb转串口芯片FDTI-FT232的驱动到底没有注册加载？其对应系统设备是/dev/ttyUSB0
+那么，通过下边这个命令查看是否已安装驱动：
+modinfo ftdi_sio
+结果显示：
+CTRL-A Z for help | 115200 8N1 | NOR | Minicom 2.7 | VT102 | Offline | ttyUSB0                                   
+sf-admin@sfadmin-sf:~/下载/Z-TEK(ZE533驱动)/Linux_x86_64/ftdi_sio$ modinfo ftdi_sio
+filename:       /lib/modules/4.13.0-36-generic/kernel/drivers/usb/serial/ftdi_sio.ko
+license:        GPL
+description:    USB FTDI Serial Converters Driver
+author:         Greg Kroah-Hartman <greg@kroah.com>, Bill Ryder <bryder@sgi.com>, Kuba Ober <kuba@mareimbrium.org>, Andreas Mohr, Johan Hovold <jhovold@gmail.com>
+srcversion:     BB8D9E0F493687F4005948C
+alias:          usb:v04B4pF900d*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v04B4p009Bd*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v0451pC32Ad*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v0A5Cp6422d*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v1B5Cp0105d*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v1B5Cp0104d*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v1B5Cp0103d*dc*dsc*dp*ic*isc*ip*in*
+。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
+#########################################################################################################################
+    +-----------------------------------------------------------------------+                                     
+    | A - Download directory : /home/sf-admin/BodyAnalyzerDatas             |                                     
+    | B - Upload directory   : /tmp                                         |                                     
+    | C - Script directory   :                                              |                                     
+    | D - Script program     : runscript                                    |                                     
+    | E - Kermit program     :                                              |                                     
+    | F - Logging options                                                   |                                     
+    |                                                                       |                                     
+    |    Change which setting?                                              |  
+ 修改A和B的路径，分别是下载文件的存放位置（开发板 ---> PC）和读取上传的文件的位置（PC ---> 开发板）
+ 
+    
