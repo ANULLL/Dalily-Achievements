@@ -22,15 +22,17 @@ Linux/drivers/usb/serial/ftdi_sio.c源码地址：http://www.cnblogs.com/shangda
 1. 输入  ls /dev/ttyUSB*
     提示没有那个文件或目录，或者可以看出串口设备是USBD的COM口信息（多少）
 
-2. 笔记本上的情况
-    输入   ls /dev/ttyUSB*
+2. 因该出现的情况
+    输入  ls /dev/ttyUSB*
     输出 /dev/ttyUSB0    表示ubuntu本身就自带了usb转串口的驱动
 
 3. 连接测试
     接上USB串口线，看看系统是否可以识别。输入以下命令
     dmesg | grep ttyUSB
-
-    我的笔记本输出 [ 27.224393] usb 2-1.1: FTDI USB Serial Device converter now attached to ttyUSB0
+    我的输出是
+    [19887.290735] usb 1-7: FTDI USB Serial Device converter now attached to ttyUSB0
+    [24026.275371] ftdi_sio ttyUSB0: FTDI USB Serial Device converter now disconnected from ttyUSB0
+    [24076.191711] usb 1-7: FTDI USB Serial Device converter now attached to ttyUSB0
     或者直接可以到/dev下看看有没有ttyUSB0或者ttyUSB1
 
 4. 安装 minicom，相当于windows下的超级终端。
@@ -67,7 +69,6 @@ Linux/drivers/usb/serial/ftdi_sio.c源码地址：http://www.cnblogs.com/shangda
             | Exit from Minicom        |
             +--------------------------+
 ##########################################################################################################################
-
 uname -a:查看linux内核版本代码
 通过内核版本下载相应的程序
 https://cn.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
@@ -94,7 +95,7 @@ sudo minicom -s
 ##########################################################################################################################
 ##########################################################################################################################
 第一次尝试串口连接：
-将/dev/tty8修改为 A - Serial Device      : /dev/USB0
+将/dev/tty8修改为 A - Serial Device     : /dev/USB0
 F - Hardware Flow Control : No 保持不变
 
           --------------------------------------------------------------------+
