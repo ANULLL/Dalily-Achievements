@@ -1,0 +1,35 @@
+方案1：通过光盘的联机软件读取数据
+  使用VCP驱动支持（虚拟COM端口驱动程序），并使用minicom串口通信工具
+  命令如下：
+  dmesg | tail
+  sudo apt-get install minicom
+  sudo minicom -s
+  最终设置结果如下：
+    +-----------------------------------------------------------------------+
+    | A -    Serial Device      : /dev/ttyUSB0                              |
+    | B - Lockfile Location     : /var/lock                                 |
+    | C -   Callin Program      :                                           |
+    | D -  Callout Program      :                                           |
+    | E -    Bps/Par/Bits       : 115200 8N1                                |
+    | F - Hardware Flow Control : No                                        |
+    | G - Software Flow Control : No                                        |
+    |                                                                       |
+    |    Change which setting?                                              |
+    +-----------------------------------------------------------------------+
+【A】指定端口号,相当于 windows 中的 COM1、COM2 等
+【E】为波特率
+【F】和【G】一般情况下建议关闭即为No,否则会出现只能接收不能发送的情况
+
+我们键盘输入任何字符都没有反应,因为 minicom 打印出来的只是串口接收到的数据
+
+minicom快捷键说明：
+Ctrl+A X 退出
+Ctrl+A C 清屏
+Ctrl+A L 保存log到文件
+Ctrl+A O 转到配置界面
+Ctrl+A J 挂起minicom，退到terminal
+Ctrl+A Z 输出所有命令的help信息
+Ctrl+A 有时log打印过快，可以通过Ctrl+A暂停输出，再按Ctrl+A继续保存log到文件中
+启动minicom时按Ctrl+A再按L，会提示要保存的文件名
+
+
