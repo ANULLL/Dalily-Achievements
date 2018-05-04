@@ -32,4 +32,18 @@ Ctrl+A Z 输出所有命令的help信息
 Ctrl+A 有时log打印过快，可以通过Ctrl+A暂停输出，再按Ctrl+A继续保存log到文件中
 启动minicom时按Ctrl+A再按L，会提示要保存的文件名
 
+########################################################################################################################
+问题：PermissionError: [Errno 13] Permission denied: '/dev/ttyUSB0'
+     serial.serialutil.SerialException: [Errno 13] could not open port /dev/ttyUSB0: [Errno 13] Permission denied: '/dev/ttyUSB0'
+尝试1：
+sudo vim /etc/udev/rules.d/70-ttyusb.rules 
+KERNEL=="ttyUSB[0-9]*",MODE="0777" 
+弊端：1.该方法会让所有的普通用户都具有访问这些串口设备的权限，存在一定的安全隐患； 2.加入此规则后，必须拔掉设备重新插入，此规则才可生效
+尝试2：
+将目标用户添加至dialout用户组                      从dialout用户组删除uxdb用户
+sudo gpasswd --add uxdb dialout                 sudo gpasswd --del uxdb dialout
+
+
+
+
 
